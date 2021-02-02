@@ -1,5 +1,5 @@
 exports.middlewareGlobal = (req, res, next) => {
-  res.locals.vr = 'Agora vou exibir a local';
+  res.locals.umaVariavelLocal = 'Este é o valor da variável local.';
   next();
 };
 

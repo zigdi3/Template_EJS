@@ -18,9 +18,11 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 
 //connectar
-mongoose.connect(process.env.CONNECTIONSTRING)
-.then(() => {console.log("conectado ao DB")
-}).catch( e=> console.log(e))
+mongoose.connect(process.env.CONNECTIONSTRING, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    app.emit('pronto');
+  })
+  .catch(e => console.log(e));
 
 
 const session = require('express-session');
@@ -37,7 +39,7 @@ app.use(express.urlencoded( {extended: true}));
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 const sessionOptions = session({
-secret: 'ioxokcnnsoxkfjdo psdjposdjfsiod', 
+secret: 'vddsfvavof $3 axs', 
 store: new MongoStore({mongooseConnection: mongoose.connection}),
 resave: false,
 saveUninitialized: false,
@@ -62,9 +64,14 @@ app.use(csrf());
 //rotas da aplicação
 app.use(routes);
 
+
 app.use(middlewareGlobal);
 app.use(csrfMiddleware);
 app.use(checkCsrfError);
 
-app.listen(port);
-console.log("server rodando em http://localhost:"+port+ " .");
+app.on('pronto', () => {
+  app.listen(3000, () => {
+    console.log('Acessar http://localhost:3000');
+    console.log('Servidor executando na porta 3000');
+  });
+});
